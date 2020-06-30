@@ -4,6 +4,7 @@ import Dashboard from '../MainContent/Dashboard/Dashboard';
 // import Dashboard from '../MainContent/Dashboard/Dashboard2';
 import RawMaterials from '../MainContent/RawMaterials/RawMaterials';
 import Warehouse from '../MainContent/Warehouse/Warehouse';
+import Return from '../MainContent/Return/Return';
 import PurchaseOrder from '../MainContent/PurchaseOrder/PurchaseOrder';
 import DailyInventory from '../MainContent/Inventory/DailyInventory';
 import MonthlyInventory from '../MainContent/Inventory/MonthlyInventory';
@@ -54,6 +55,7 @@ class mainbuilder extends Component{
                         <Route path="/monthly-inventory" component={MonthlyInventory} />
                         <Route path="/printing-department" component={PrintingDepartment} />
                         <Route path="/production-department" component={ProductionContainer} />
+                        <Route path="/return" component={Return} />
                         <Route path="/salesOrder" component={SalesOrder} />
                         <Route path="/reports-customer-report" component={CustomerReport} />
                         <Route path="/reports-raw-report" component={RawMaterialReport} />

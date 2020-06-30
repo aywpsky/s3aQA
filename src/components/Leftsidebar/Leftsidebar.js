@@ -72,6 +72,11 @@ class leftsidebar extends Component {
                                </Link>
                            </li>
                            <li>
+                               <Link to='/return' title="Return" className={this.state.Tab=='return' ? 'waves-effect active': 'waves-effect'} onClick={this.setActiveTab.bind(this, 'return', '', '')}>
+                               <i className="mdi mdi-redo"></i><span> Return </span>
+                               </Link>
+                           </li>
+                           <li>
                                <Link to='/expenses' title="Expenses" className={this.state.Tab=='expenses' ? 'waves-effect active': 'waves-effect'} onClick={this.setActiveTab.bind(this, 'expenses', '', '')}>
                                <i className="fas fa-wallet"></i><span> Expenses </span>
                                </Link>

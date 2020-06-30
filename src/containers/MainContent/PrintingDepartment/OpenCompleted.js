@@ -25,7 +25,7 @@ const OpenCompleted = (props) => {
         <Modal  isOpen={props.isOpen} toggle={() => props.toggle()}>
             <ModalHeader toggle={() => props.toggle()}>
                 Completed List
-                    </ModalHeader>
+            </ModalHeader>
             <ModalBody>
                 <Row>
                     <Col md={12}>

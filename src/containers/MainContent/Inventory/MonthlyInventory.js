@@ -23,6 +23,9 @@ class MonthlyInventory extends Component{
     constructor ( props ) {
         super( props );
         var today = new Date();
+        var day_now = today.getDate();
+        var date25 = today.getFullYear()+'-'+(today.getMonth()+1)+'-25';
+        var date26 = today.getFullYear()+'-'+(today.getMonth()+1)+'-26';
         var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
         this.validator = new SimpleReactValidator();
         this.state = {
@@ -49,8 +52,11 @@ class MonthlyInventory extends Component{
             physical_id             : '',
             recorded_date           : '',
             current_date            : date,
+            date25                  : date25,
+            date26                  : date26,
             physical_qty_finish     : 0,
             physical_note_finish    : '',
+            ActModal                : false,
         }
         this.Filter           = this.Filter.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
@@ -275,8 +281,15 @@ class MonthlyInventory extends Component{
        }
     }
 
+
+    SubmitStatus = async(e) => {
+        this.setState({
+             ActModal : !this.stateActModal,
+        })
+    }
     submitInventory = async(e) =>{
         e.preventDefault();
+
         const {fromDate , toDate , material} = this.state;
         let url = "";
         let response = '';
@@ -294,6 +307,14 @@ class MonthlyInventory extends Component{
                     this.btn_con();
                     this.Filter(this.state.activeTab);
                     this.forceUpdate();
+                    if(response.data.msg == "success"){
+                        Alertify.success('Successfully submitted!');
+                    }else{
+                        Alertify.error('Something went wrong!');
+                    }
+                    this.setState({
+                         ActModal : !this.stateActModal,
+                    })
                 break;
 
             case 3:
@@ -358,7 +379,7 @@ class MonthlyInventory extends Component{
     } // end SubmitForm
 
     btn_con = () => {
-            return((this.state.recorded_date < this.state.current_date) ? <button type="button" onClick={this.submitInventory} className="float-right btn btn-info real-btn btn btn-secondary">Submit Inventory</button> :  <button type="button" className="float-right btn btn-info real-btn btn btn-sec ondary">This Button will activate tomorrow</button>)
+            return((this.state.recorded_date != this.state.current_date && (this.state.current_date == this.state.date25 || this.state.current_date == this.state.date26)) ? <button type="button" onClick={this.SubmitStatus} className="float-right btn btn-info real-btn btn btn-secondary">Submit Inventory</button> :  <button type="button" className="float-right btn btn-info real-btn btn btn-sec ondary">This Button will activate tomorrow</button>)
     }
 
     convertDate =(date) =>{
@@ -506,7 +527,7 @@ class MonthlyInventory extends Component{
                                                     <Col sm={2}>
                                                         <label className="col-from-label">To</label>
                                                     </Col>
-                                                    <Col sm={10} classNam="float-right">
+                                                    <Col sm={10} className="float-right">
                                                         <input className="form-control oval_select" value={this.state.toDate} name="toDate" type="date" placeholder="Date From:" onChange= {(date) => this.setState({toDate : date.target.value})}/>
                                                     </Col>
                                               </Row>
@@ -679,6 +700,17 @@ class MonthlyInventory extends Component{
                      </ModalBody>
                  </Modal>
                  {/*END Record monthly Inventory MODAL*/}
+
+                 <Modal isOpen= {this.state.ActModal}>
+                     <ModalHeader toggle= {() => this.setState({ActModal : false})} ></ModalHeader>
+                     <ModalBody>
+                         <p>Are you sure you want to {this.state.deac_action ? 'enable' : 'disable'} this user?</p>
+                     </ModalBody>
+                     <ModalFooter>
+                         <Button color= "primary" className="btn btn-primary waves-effect" onClick={this.submitInventory}>Yes</Button>
+                         <Button color= "secondary" onClick={ () => this.setState({ActModal : false})}>Cancel</Button>
+                     </ModalFooter>
+                 </Modal>
 
             </AUX>
         )

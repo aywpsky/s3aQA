@@ -12,6 +12,7 @@ import  appreducers from './store/reducers/appreducers';
 import  reportreducers from './store/reducers/reportreducers';
 import  salesReducers from './store/reducers/salesReducers';
 import  warehouseReducer from './store/reducers/warehouseReducer';
+import  returnReducer from './store/reducers/returnReducer';
 import { Provider } from 'react-redux';
 import Config from './config/Config';
 
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
     appreducers:appreducers,
     reportreducers : reportreducers,
     salesReducers : salesReducers,
-    warehouseReducer: warehouseReducer
+    warehouseReducer: warehouseReducer,
+    returnReducer: returnReducer
 });
 
 const store = createStore(rootReducer);

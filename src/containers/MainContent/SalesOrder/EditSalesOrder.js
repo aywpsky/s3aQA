@@ -31,14 +31,14 @@ class EditSalesOrder extends Component {
     AddMore = () => {
         const {editSalesData} = this.state;
         let data = [];
-        let temp_details = {job:'',description : '',special_instruction : '' ,dispatch_date : new Date(), additional_details : [{ substrate : '' , cap: '' , quantity : '', top_seal : ''}] };
+        let temp_details = {job:'',description : '',special_instruction : '' ,dispatch_date : new Date(), additional_details : [{ substrate : '' , cap: '' , quantity : '', top_seal : '', bottom_sale:''}] };
         editSalesData.push(temp_details);
         this.setState({editSalesData});
     }
 
     AddMoreMaterial = (idx) => {
         const {editSalesData} = this.state;
-        editSalesData[idx].additional_details.push({ substrate : '' , cap: '' , quantity : '', top_seal : ''});
+        editSalesData[idx].additional_details.push({ substrate : '' , cap: '' , quantity : '', top_seal : '', bottom_sale:''});
         this.setState({editSalesData});
     }
 
@@ -165,34 +165,41 @@ class EditSalesOrder extends Component {
             				                            <FormGroup>
             				                                <Label>Substrate</Label>
             				                                <input type="text" className="form-control" name={"substrate["+idx+"]["+idx2+"]"} value={val2.substrate} onChange={(value) => this.handle_materials(idx,idx2,'substrate',value.target.value) } placeholder="Enter Substrate" />
-            				                                <span id="err">{this.validator.message('Substrate', val2.substrate, 'required')}</span>
-            				                            </FormGroup>
+            				                             </FormGroup>
             				                       	</Col>
             										<Col md={3}>
             											<FormGroup>
             												<label>Cap</label>
             												<Input type="text" className="form-control" name={"cap["+idx+"]["+idx2+"]"} value={val2.cap} onChange={(value) => this.handle_materials(idx , idx2,'cap',value.target.value) } placeholder="Enter Cap" />
-            												<span id="err">{this.validator.message('Cap', val2.cap, 'required')}</span>
             											</FormGroup>
             										</Col>
-            										<Col md={3}>
+            										<Col md={2}>
             											<div className="form-group">
             												<Label>Quantity</Label>
             												<input type="number" className="form-control" name={"quantity["+idx+"]["+idx2+"]"} value={val2.quantity} onChange={(value) => this.handle_materials(idx , idx2,'quantity',value.target.value) }  placeholder="Enter Quantity" />
-            												<span id="err">{this.validator.message('quantity', val2.quantity, 'required|integer')}</span>
             											</div>
             										</Col>
-            										<Col md={3}>
+            										<Col md={2}>
             											<FormGroup>
             												<Label className="control-label">
             													Top Seal
-            													{(idx2 > 0) ? <button onClick={() => this.SpliceMaterial(val2.pk_sales_order_job_details_id , idx , idx2)} type="button" class="addMoreClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
             												</Label>
             												<select className="form-control select2" name={"topSeal["+idx+"]["+idx2+"]"} value={val2.top_seal}  onChange = {(value) => this.handle_materials(idx , idx2,'top_seal',value.target.value)}>
             													<option>Select</option>
             													<option value="1">Yes</option>
             													<option value="0">No</option>
             												</select>
+
+            											</FormGroup>
+            										</Col>
+
+            										<Col md={2}>
+            											<FormGroup>
+            												<Label className="control-label">
+            													Bottom Sale
+            													{(idx2 > 0) ? <button onClick={() => this.SpliceMaterial(val2.pk_sales_order_job_details_id , idx , idx2)} type="button" class="addMoreClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
+            												</Label>
+            												<input type="text" className="form-control" name={"bottom_sale["+idx+"]["+idx2+"]"} value={val2.bottom_sale} onChange={(value) => this.handle_materials(idx , idx2,'bottom_sale',value.target.value) }  placeholder="Enter Bottom Sale" />
 
             											</FormGroup>
             										</Col>

@@ -106,19 +106,20 @@ class JobOrder extends Component {
                  }
 
                  let completed = 0;
+                 let num_to_complete = key.from_return == '1' ? key.num_of_prod_to_complete : key.max_approved_laminate_with;
                  if(key.completed_qty != null){
                      completed = key.completed_qty;
                  }
                  let percent = 0;
                  if(completed != 0 && key.max_approved_laminate_with != 0){
-                    percent = ((key.completed_qty / key.max_approved_laminate_with) * 100);
+                    percent = ((key.completed_qty / num_to_complete) * 100);
                 }
 
                 let x = {
                     js_no: key.job_sheet_id,
                     js_name: key.job,
                     dispath_date: key.dispatch_date,
-                    no_to_complete: key.max_approved_laminate_with,
+                    no_to_complete:  num_to_complete,
                     no_completed: key.completed_qty ? key.completed_qty : '0',
                     completed_per: <ProgressBar now={percent.toFixed(2)} label={`${percent.toFixed(2)}%`} />,
                     status: status,

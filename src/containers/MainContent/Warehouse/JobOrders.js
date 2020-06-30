@@ -47,7 +47,7 @@ class JobOrders extends Component {
                     { title: "View Job Order Process",      icon: "ion-document-text",        color: "success",      function: () => this.openJobOrderProcess(key.sales_id) },
                 ];
                 let x = {
-                    salesID :      "SOID" + key.sales_id.padStart(5, "0"),
+                    salesID :      "JOID" + key.sales_id.padStart(5, "0"),
                     joborder:      key.description,
                     company :      key.company,
                     dispatch_date: key.dispatch_date,
@@ -148,7 +148,7 @@ class JobOrders extends Component {
 
         const data = {
             columns: [
-                { label: 'SALES ID',      field: 'salesID',       width: 150 },
+                { label: 'JOB ORDER ID',      field: 'salesID',       width: 150 },
                 { label: 'JOB ORDER',     field: 'customer',      width: 200 },
                 { label: 'CUSTOMER',      field: 'company',       width: 200 },
                 { label: 'DISPATCH DATE', field: 'dispatch_date', width: 200 },

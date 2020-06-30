@@ -61,9 +61,10 @@ class FinishGoodMonthly extends Component{
       }
     }
 
-    
+
 
     render(){
+
         const data = {
             columns: [
                 {
