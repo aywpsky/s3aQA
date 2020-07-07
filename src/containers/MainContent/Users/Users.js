@@ -65,6 +65,11 @@ class Users extends Component{
        })
 
    }
+
+   Capitalize(str){
+    return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
    async SubmitStatus() {
       let url = Config.base_url + 'users/EditStatus';
       let formData = {
@@ -91,7 +96,7 @@ class Users extends Component{
          let url = Config.base_url + 'users/GetUserDetails';
          response = await axios.post(url , '');
          if (response.data) {
-            
+
             const m = response.data.map((key, idx) => {
                let groupBtn = [
                   { title: "Edit",icon: "ion-edit",color:"info",function: () => this.EditUserBtn(key.user_id)},
@@ -100,9 +105,9 @@ class Users extends Component{
                let x = {
                  userID          : "UID" + key.user_id.padStart(5, "0"),
                  username        : key.username,
-                 fullname       : key.first_name +' '+key.last_name,
+                 fullname       : this.Capitalize(key.first_name) +' '+this.Capitalize(key.last_name),
                  // lastname        : key.last_name,
-                 position        : key.position,
+                 position        : this.Capitalize(key.position),
                  type            : (key.type == 0) ? "Admin" : (key.type == 1) ? "Warehouse Manager" : (key.type == 2) ? "Printing Deparment Manager" : (key.type == 3) ? "Production Deparment Manager" : (key.type == 4) ? "Marketing Department Manager" : (key.type == 5) ? "Accounting Department Manager" : "",
 
                  status          : (key.status == 1) ?  <Badge title="Status" color="primary" pill >Active</Badge> : <Badge title="Status"  color="primary" outline>Inactive</Badge>,
@@ -208,7 +213,7 @@ class Users extends Component{
            position       : response.data.position,
            type           : response.data.type,
            username       : response.data.username,
-           password       : response.data.password
+           // password       : response.data.password
        });
    }
    // END
@@ -336,7 +341,7 @@ render(){
                   </Col>
                   <Col md={4}>
                      <FormGroup>
-                         <Label>Password</Label>
+                         <Label>{(this.state.action === 'Add') ? "Password" : "Enter New Password"}</Label>
                          <Input type="password" className="form-control" name="password"  value={this.state.password}  onChange={this.InputOnChange} readOnly={this.state.readOnly}/>
                      </FormGroup>
                   </Col>

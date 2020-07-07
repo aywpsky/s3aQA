@@ -31,7 +31,7 @@ class login extends Component
              this.props.UpdateLoginAgain();
         }
        }
-    
+
        inputChange(e){
            this.setState({ [e.target.name] : e.target.value });
        }

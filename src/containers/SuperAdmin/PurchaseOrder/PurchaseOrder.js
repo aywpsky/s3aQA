@@ -251,9 +251,9 @@ class PurchaseOrder extends Component{
 
       checkPOstatus = (id , po_id) => {
          let groupBtn = [
-            // { title: "Approve",icon: "ion-checkmark",color:"primary", disabled : false,function: () => this.ApproveBtn(po_id)},
-            // { title: "Decline" ,icon: "ion-close",color:"secondary", disabled : false,function: () => this.DeclineModalToggle(po_id)},
-            { title: "Edit" ,icon: "ion-edit",color:"info", disabled : false,function: () => this.EditPO(po_id)},
+            { title: "Approve",icon: "ion-checkmark",color:"primary", disabled : false,function: () => this.ApproveBtn(po_id)},
+            { title: "Decline" ,icon: "ion-close",color:"secondary", disabled : false,function: () => this.DeclineModalToggle(po_id)},
+            // { title: "Edit" ,icon: "ion-edit",color:"info", disabled : false,function: () => this.EditPO(po_id)},
             { title: "View" ,icon: "ion-eye",color:"warning", disabled : false,function: () => this.viewPO(po_id)},
          ];
          let groupBtn2 = [
@@ -714,9 +714,6 @@ class PurchaseOrder extends Component{
                                PurchaseOrder
                             </li>
                         </ol>
-                    </div>
-                    <div className="page-btn">
-                       <Button type="button" className="btn btn-primary real-btn" onClick={this.addPurchaseOrderBtn}>Add Purchase Order</Button>
                     </div>
                 </div>
             </div>

@@ -40,11 +40,16 @@ import RequestList from '../MainContent/ProductionDepartment/RequestList';
 import PrintingProduction from '../MainContent/PrintingDepartment/JobOrder';
 import PrintingRequestList from '../MainContent/PrintingDepartment/RequestList';
 
+
+// Super Admin
+import SuperMonthlyInventory from '../SuperAdmin/MonthlyInventory/MonthlyInventory';
+import SuperPurchaseOrder from '../SuperAdmin/PurchaseOrder/PurchaseOrder';
+
 class mainbuilder extends Component{
 
     render(){
-        switch (parseInt(Helper.getUserDetail('user_type'))) {
-            case 1:
+        switch (parseInt(Helper.getUserDetail('type'))) {
+            case 0:
                 return(
                     <Switch>
                         <Route path="/dashboard" component={Dashboard} />
@@ -70,7 +75,7 @@ class mainbuilder extends Component{
                 );
                 break;
 
-            case 2:
+            case 1:
                 return(
                     <Switch>
                     <Route path="/warehouse" component={Warehouse} />
@@ -80,7 +85,7 @@ class mainbuilder extends Component{
                     </Switch>
                 )
                 break;
-            case 3:
+            case 2:
                 return(
                     <Switch>
                     <Route path="/dashboard" component={Dashboard} />
@@ -90,7 +95,7 @@ class mainbuilder extends Component{
                     </Switch>
                 )
                 break;
-            case 4:
+            case 3:
                 return(
                     <Switch>
                     <Route path="/dashboard" component={Dashboard} />
@@ -100,11 +105,21 @@ class mainbuilder extends Component{
                     </Switch>
                 )
                 break;
-            case 5:
+            case 4:
                 return(
                     <Switch>
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/salesOrder" component={SalesOrder} />
+                    <Route path="/" component={Helper.isLoggedIn() ? Dashboard : Login } />
+                    </Switch>
+                )
+                break;
+            case 6:
+                return(
+                    <Switch>
+                    <Route path="/dashboard" component={Dashboard} />
+                    <Route path="/SuperMonthlyInventory" component={SuperMonthlyInventory} />
+                    <Route path="/SuperPurchaseOrder" component={SuperPurchaseOrder} />
                     <Route path="/" component={Helper.isLoggedIn() ? Dashboard : Login } />
                     </Switch>
                 )

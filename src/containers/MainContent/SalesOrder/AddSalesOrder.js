@@ -255,10 +255,14 @@ class AddSalesOrder extends Component {
 										<Col md={2}>
 											<FormGroup>
 												<Label className="control-label">
-													Bottom Sale
+													Bottom Seal
                                                     {(idx2 > 0) ? <button onClick={() => this.SpliceMaterial(idx , idx2)} type="button" class="addMoreClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
 												</Label>
-												<input type="text" className="form-control" name={"bottom_sale["+idx+"]["+idx2+"]"} value={val2.bottom_sale} onChange={(value) => this.handle_changes(idx , idx2,'bottom_sale',value.target.value) }  placeholder="Enter Bottom Sale" />
+                                                <select className="form-control select2" name={"bottom_sale["+idx+"]["+idx2+"]"} value={val2.bottom_sale} onChange={(value) => this.handle_changes(idx , idx2,'bottom_sale',value.target.value)} >
+													<option>Select</option>
+													<option value="1">Yes</option>
+													<option value="0">No</option>
+												</select>
 											</FormGroup>
 										</Col>
 									</Row>
