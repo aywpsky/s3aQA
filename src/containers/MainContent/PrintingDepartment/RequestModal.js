@@ -25,7 +25,7 @@ Alertify.defaults = Config.AlertConfig
             return (
                 <Modal isOpen= {props.isOpen} toggle={() => props.toggle()}>
                     <ModalHeader toggle = {() => props.toggle()}>
-                        Request Form
+                        Request Raw Material
                     </ModalHeader>
                     <ModalBody>
                         <Form method="POST" onSubmit= {(e) => submit(e , props.id)}>

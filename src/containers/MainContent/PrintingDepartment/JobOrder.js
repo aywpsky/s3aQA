@@ -7,7 +7,7 @@ import { MDBDataTable,} from 'mdbreact';
 import Config from '../../../config/Config';
 import Alertify from 'alertifyjs';
 import { ProgressBar  } from 'react-bootstrap';
-import ViewModal from './ViewModal';
+import ViewJobsheet from './ViewJobsheet';
 import axios from 'axios';
 import RequestModal from './RequestModal';
 import OpenCompleted from './OpenCompleted';
@@ -172,7 +172,7 @@ class JobOrder extends Component {
 
                     <Modal size="lg" isOpen={this.state.modalOpen} toggle={this.toggleModal}>
                         <ModalHeader toggle={this.toggleModal}>Job Sheet</ModalHeader>
-                        <ViewModal js_id={this.state.js_id} />
+                        <ViewJobsheet js_id={this.state.js_id} />
                     </Modal>
 
                     <RequestModal

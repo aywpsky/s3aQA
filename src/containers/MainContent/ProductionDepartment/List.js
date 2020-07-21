@@ -7,13 +7,14 @@ import { MDBDataTable} from 'mdbreact';
 import {Col} from "reactstrap";
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter , Form , FormGroup, Label , Input , Row,ButtonGroup, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
-import ViewModal from './ViewModal';
+import ViewJobsheet from './ViewJobsheet';
 import RequestModal from './RequestModal';
 import { ProgressBar  } from 'react-bootstrap';
 import Confirm from "./Confirm";
 import AddCompleted from "./AddCompleted";
 import {connect} from 'react-redux';
 import qs from 'qs';
+
 class List extends Component {
     constructor(props) {
         super(props);
@@ -196,7 +197,7 @@ class List extends Component {
 
                 <Modal size="lg" isOpen={this.state.modalOpen} toggle={this.toggleModal}>
                    <ModalHeader toggle={this.toggleModal}>Job Sheet</ModalHeader>
-                   <ViewModal js_id={this.state.js_id}/>
+                   <ViewJobsheet js_id={this.state.js_id}/>
                 </Modal>
 
                 <RequestModal

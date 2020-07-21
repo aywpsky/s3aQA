@@ -25,11 +25,13 @@ const initalState = {
     js_data: [],
 }
 
-class JobSheetModal extends Component {
+class CreateJobSheet extends Component {
     constructor(props) {
         super(props);
         this.state = initalState;
-
+        this.props.handle_changes('print_production_fields',false);
+        this.props.handle_changes('table_production_fields',false);
+        this.props.handle_changes('logistic_fields',false);
     }
 
      submit = async (e,id) => {
@@ -49,15 +51,28 @@ class JobSheetModal extends Component {
     }
 
 
-    onClick = async () =>{
-        this.props.set_toggle_modal('print_production_fields')
+    handleChange = (e) => {
+        var value = e.target.value;
+
+        this.props.handle_changes('print_production_fields',false);
+        this.props.handle_changes('table_production_fields',false);
+        this.props.handle_changes('logistic_fields',false);
+
+        if(value == 'printingAndProduction'){
+            this.props.handle_changes('print_production_fields',true);
+            this.props.handle_changes('table_production_fields',true);
+        }else if (value == 'printing') {
+            this.props.handle_changes('print_production_fields',true);
+        }else if (value == 'production') {
+            this.props.handle_changes('table_production_fields',true)
+        }
+        // else{
+        //     this.props.handle_changes('logistic_fields',true);
+        // }
+
+
     }
-    onClick2 = async () =>{
-        this.props.set_toggle_modal('table_production_fields')
-    }
-    onClick3 = async () =>{
-        this.props.set_toggle_modal('logistic_fields')
-    }
+
     // componentDidMount() {
     //     this.getJobSheetData();
     // }
@@ -88,7 +103,6 @@ class JobSheetModal extends Component {
         let create_js_data = [];
         let last_id = [];
         let cjs = [];
-        console.log(this.props.create_js_data);
         if(this.props.create_js_data.length > 0 || this.props.js_last_id.length > 0){
             create_js_data = this.props.create_js_data;
 
@@ -157,9 +171,17 @@ class JobSheetModal extends Component {
                                     </tr>
 
                                     <tr>
-                                        <td colSpan='2'>
+                                        <td>
                                             <Label>Variant Description:</Label>
                                             <Input name="var_des" required/>
+                                        </td>
+                                        <td>
+                                            <Label>Department:</Label>
+                                            <Input type="select" name="department_type" onChange = {this.handleChange} required>
+                                                <option value="" selected hidden>-Select-</option>
+                                                <option value="printing">Printing</option>
+                                                <option value="production">Production</option>
+                                            </Input>
                                         </td>
                                     </tr>
 
@@ -175,8 +197,8 @@ class JobSheetModal extends Component {
                                     </tr>
 
                                     {/* Print Production*/}
-                                    <tr className="print_production_trigger"  onClick={this.onClick}>
-                                        <th colSpan="2"><h5>Print Production</h5>{this.props.print_production_fields?<i className="fas fa-angle-up"></i>:<i className="fas fa-angle-down"></i>}</th>
+                                    <tr className="print_production_trigger"  style={{display:this.props.print_production_fields ? 'table-row':'none'}}>
+                                        <th colSpan="2"><h5>Print Production</h5>{this.props.print_production_fields}</th>
                                     </tr>
                                     {this.state.addMore.form.map((val , idx) => {
                                         return(
@@ -234,8 +256,8 @@ class JobSheetModal extends Component {
                                     </tr>
                                     {/* Print Production*/}
 
-                                    <tr className="print_production_trigger"  onClick={this.onClick2}>
-                                        <th colSpan="2"><h5>Tube Production</h5>{this.props.table_production_fields?<i className="fas fa-angle-up"></i>:<i className="fas fa-angle-down"></i>}</th>
+                                    <tr className="print_production_trigger"  style={{ display:this.props.table_production_fields ? 'table-row':'none'}}>
+                                        <th colSpan="2"><h5>Tube Production</h5>{this.props.table_production_fields}</th>
                                     </tr>
                                     {/*Table Production*/}
                                     {this.state.addMoreTube.form.map((val , idx) => {
@@ -307,29 +329,29 @@ class JobSheetModal extends Component {
                                     {/* Table Production*/}
 
                                     {/*Logistic*/}
-                                    <tr className="print_production_trigger"  onClick={this.onClick3}>
-                                        <th colSpan="2"><h5>Logistic</h5>{this.props.logistic_fields?<i className="fas fa-angle-up"></i>:<i className="fas fa-angle-down"></i>}</th>
+                                    <tr className="print_production_trigger" style={{ display:this.props.logistic_fields ? 'table-row':'none'}}>
+                                        <th colSpan="2"><h5>Logistic</h5>{this.props.logistic_fields}</th>
                                     </tr>
 
-                                    <tr className="print_production_fields" style={{ display:this.props.logistic_fields ? 'none':'table-row'}}>
+                                    <tr className="print_production_fields" style={{ display:this.props.logistic_fields ? 'table-row':'none'}}>
                                         <td>
                                             <Label>Packaging Box Size:</Label>
-                                            <Input name="packaging_box_size" type="number" required/>
+                                            <Input name="packaging_box_size" type="number"/>
                                         </td>
                                         <td >
                                             <Label>Max Approved Box Withdrawal:</Label>
-                                            <Input name="max_approve_box_with" required/>
+                                            <Input name="max_approve_box_with"/>
                                         </td>
                                     </tr>
 
-                                    <tr className="print_production_fields" style={{display:this.props.logistic_fields ? 'none':'table-row'}}>
+                                    <tr className="print_production_fields" style={{display:this.props.logistic_fields ? 'table-row':'none'}}>
                                         <td>
                                             <Label>Quantity per Box:</Label>
-                                            <Input name="qty_per_box" type="number" required/>
+                                            <Input name="qty_per_box" type="number"/>
                                         </td>
                                         <td >
                                             <Label>Boxes to Deliver:</Label>
-                                            <Input name="boxes_to_deliver" type="number"  required/>
+                                            <Input name="boxes_to_deliver" type="number" />
                                         </td>
                                     </tr>
                                     {/* Logistic*/}
@@ -382,7 +404,7 @@ class JobSheetModal extends Component {
                             </table>
 
                                 <ModalFooter>
-                                    <Button color="secondary" className="btn btn-secondary waves-effect" onClick={() => this.props.toggle()}>Cancel</Button>{' '}
+                                    <Button color="secondary" className="btn btn-secondary waves-effect" onClick={() => this.props.set_toggle_modal('createJSModal')}>Cancel</Button>{' '}
                                     <Button type="submit" color="primary" className="btn btn-secondary waves-effect">Submit</Button>
                                 </ModalFooter>
                             </Form>
@@ -411,7 +433,8 @@ const mapStateToProps = state => {
 const mapActionToProps = dispatch => {
     return {
         set_toggle_modal: (state) => dispatch({ type: 'TOGGLE_MODAL' ,state: state}),
+        handle_changes: (state, value) => dispatch({ type: 'HANDLE_CHANGE', state: state, value: value }),
         RemoveDataByIdx : (idx) => dispatch({type : 'RemoveDataByIdx' , idx : idx}),
     }
 }
-export default connect(mapStateToProps, mapActionToProps)(JobSheetModal);
+export default connect(mapStateToProps, mapActionToProps)(CreateJobSheet);

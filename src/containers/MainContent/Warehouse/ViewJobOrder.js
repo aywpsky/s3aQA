@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import { connect } from 'react-redux';
 
-class ModalView extends Component {
+class ViewJobOrder extends Component {
 
     constructor(props) {
         super(props);
@@ -127,4 +127,4 @@ const mapActionToProps = dispatch => {
         handle_changes: (state, value) => dispatch({ type: 'HANDLE_CHANGE', state: state, value: value }),
     }
 }
-export default connect(mapStateToProps, mapActionToProps)(ModalView);
+export default connect(mapStateToProps, mapActionToProps)(ViewJobOrder);

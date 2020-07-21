@@ -5,12 +5,12 @@ import Config from "../../../config/Config";
 import axios from "axios";
 import Moment from 'moment';
 
-class ViewModal extends Component {
+class ViewJobsheet extends Component {
     constructor(props) {
         super(props);
         this.state = {
             js_data: [],
-            print_data: [],
+            department_data: [],
         }
     }
 
@@ -23,7 +23,7 @@ class ViewModal extends Component {
             response = await axios.get(url);
 
         if (response.data.msg == 'success') {
-            this.setState({ js_data: response.data.result.all_data, print_data: response.data.result.printing});
+            this.setState({ js_data: response.data.result.all_data, department_data: response.data.result.department});
         }
 
     }
@@ -61,7 +61,7 @@ class ViewModal extends Component {
                                         <tr>
                                             <td>
                                                 <Label>Customer:</Label>
-                                                <p> {data.customer}</p>
+                                                <p> {data.company}</p>
                                             </td>
                                             <td>
                                                 <Label>Work Order #</Label>
@@ -72,17 +72,18 @@ class ViewModal extends Component {
                                         <tr>
                                             <td>
                                                 <Label>Ship To:</Label>
+                                                <p>{data.ship_to}</p>
                                             </td>
                                             <td>
                                                 <Label>Batchcode:</Label>
-                                                <p>08.30.19NN.100ml</p>
+                                                <p>{data.batch_code}</p>
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td colSpan='2'>
                                                 <Label>Variant Description:</Label>
-                                                <p>100ml Naturacentials Nigeria</p>
+                                                <p>{data.variant_description}</p>
                                             </td>
                                         </tr>
 
@@ -101,7 +102,7 @@ class ViewModal extends Component {
                                         </tr>
 
                                         {
-                                            this.state.print_data.map((datas, keys) => {
+                                            this.state.department_data.map((datas, keys) => {
                                                 return (
                                                     <tr>
                                                         <td id="production_tr_div" colspan="100%">
@@ -113,7 +114,7 @@ class ViewModal extends Component {
                                                                     </td>
                                                                     <td >
                                                                         <Label>Laminate Thickness:</Label>
-                                                                        <p> {datas.laminate_width}</p>
+                                                                        <p> {datas.laminate_thickness}</p>
                                                                     </td>
                                                                 </tr>
 
@@ -160,7 +161,7 @@ class ViewModal extends Component {
                                             </td>
                                             <td >
                                                 <Label>Production Leader:</Label>
-                                                <p>{data.prodiction_leader}</p>
+                                                <p>{data.production_leader}</p>
                                             </td>
                                         </tr>
 
@@ -199,4 +200,4 @@ class ViewModal extends Component {
 
 }
 
-export default ViewModal;
+export default ViewJobsheet;

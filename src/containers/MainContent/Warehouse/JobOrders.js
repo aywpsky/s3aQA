@@ -7,9 +7,9 @@ import SimpleReactValidator from 'simple-react-validator';
 import { MDBDataTable } from 'mdbreact';
 import { Row, Col, } from 'reactstrap';
 import GroupButton from '../../CustomComponents/GroupButton';
-import ModalView from './ModalView';
+import ViewJobOrder from './ViewJobOrder';
 import ViewProcess from './ViewProcess';
-import ModalViewDetails from './ModalViewDetails';
+import ViewJobSheetDetails from './ViewJobSheetDetails';
 import { ProgressBar  } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
@@ -126,7 +126,7 @@ class JobOrders extends Component {
         let url = Config.base_url + 'warehouse/viewWorkOrder/' + id,
         response = await axios.get(url);
 
-        if(response.data.length == 0){
+        if(response.data.length >= 2){
             this.props.handle_changes('is_job_sheet_complete',true);
         }else{
             this.props.handle_changes('is_job_sheet_complete',false);
@@ -161,8 +161,8 @@ class JobOrders extends Component {
             <AUX>
 
                 <ViewProcess/>
-                <ModalView/>
-                <ModalViewDetails refresh={() => this.displayJobSheetData(this.props.job_sheet_id)}/>
+                <ViewJobOrder/>
+                <ViewJobSheetDetails refresh={() => this.displayJobSheetData(this.props.job_sheet_id)}/>
 
                 <Row>
                     <Col sm={12}>
