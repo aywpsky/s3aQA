@@ -10,6 +10,8 @@ import { ProgressBar  } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import CreateJobSheetModal from './CreateJobSheetModal';
 import GroupButton from '../../CustomComponents/GroupButton';
+import UpdateJobSheet from './UpdateJobSheet';
+
 
 class Return extends Component {
 
@@ -24,6 +26,7 @@ class Return extends Component {
             completed: 0,
             delivered: 0,
             job: '',
+            js_id:'',
         }
     }
 
@@ -81,7 +84,17 @@ class Return extends Component {
                 completed: completed,
                 delivered: delivered,
                 job: job,
+                js_id: id,
 			})
+
+            let updatejob = {
+            'workInProgress': workInProgress,
+            'completed'      : completed,
+            'delivered'      : delivered,
+            'job'            : job,}
+
+            console.log(id)
+            this.props.handle_changes('return_updatejob',updatejob);
 	}
     toggleDel = () =>{
 	   this.setState({
@@ -159,7 +172,7 @@ class Return extends Component {
                     com_per:   <ProgressBar now={percent.toFixed(2)} label={`${percent.toFixed(2)}%`} /> ,
                     total_com:  total,
                     work_in_prog: work_in_prog,
-                    for_del:   completed != 0 ? <button className="btn btn-success" onClick={() => this.modalOpen(key.return_job_sheet_id,work_in_prog,completed,delivered,key.job)} type="button">{completed} - Deliver Now</button> : 0,
+                    for_del:   completed != 0 ? <button className="btn btn-success" onClick={() => this.modalOpen(key.job_sheet_id,work_in_prog,completed,delivered,key.job)} type="button">{completed} - Deliver Now</button> : 0,
                     del: delivered,
                     num_com:  num_to_complete,
                     status: status
@@ -225,16 +238,9 @@ class Return extends Component {
 
 
 
-                <Modal isOpen={this.state.modalOpenDeliver} toggle={this.toggleDel}>
-                  <ModalHeader toggle={this.toggleDel}>Approve Request</ModalHeader>
-                  <ModalBody>
-                      <p>Are you sure you to update it to delivered?</p>
-                      <p>It will be added to delivered data automatically once update.</p>
-                   <ModalFooter>
-                        <Button color="primary" className="btn btn-secondary waves-effect" onClick={this.toggleDel}>Cancel</Button>
-                        <Button type="submit" onClick={this.updateDeliverBtn} color="success" className="btn btn-secondary waves-effect">OK</Button>
-                   </ModalFooter>
-                  </ModalBody>
+                <Modal size="lg" isOpen={this.state.modalOpenDeliver} toggle={this.toggleDel}>
+                  <ModalHeader toggle={this.toggleDel}>Deliver</ModalHeader>
+                   <UpdateJobSheet js_id={this.state.js_id} updatejob={this.props.return_updatejob} refresh={() => this.displayJobSheetData()}/>
                 </Modal>
 
             </AUX>
@@ -249,6 +255,7 @@ const mapStateToProps = state => {
         return_create_js_data: state.returnReducer.return_create_js_data,
         return_js_last_id: state.returnReducer.return_js_last_id,
         return_job_sheet_id: state.returnReducer.return_job_sheet_id,
+        return_updatejob: state.returnReducer.return_updatejob,
     }
 }
 const mapActionToProps = dispatch => {

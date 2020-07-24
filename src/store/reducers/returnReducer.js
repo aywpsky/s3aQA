@@ -10,6 +10,8 @@ const initState = {
     return_print_production_fields     :   false,
     return_table_production_fields     :   false,
     return_logistic_fields             :   false,
+    return_quantity                    :   0,
+    return_updatejob                   :   [],
 }
 
 const returnReducer = (state = initState, action) => {

@@ -112,12 +112,15 @@ class CreateJobSheet extends Component {
 
                 js_number = parseInt(last_id[0].job_sheet_id)+1;
             }
+
+            console.log(create_js_data);
              cjs = {
                 date: Moment(create_js_data[0].job_date).format('MMMM DD YYYY'),
                 po: 'JOID'+create_js_data[0].sales_id.padStart(5, "0"),
                 sales_id:create_js_data[0].sales_id,
                 js: 'JSID'+js_number,
                 company: create_js_data[0].company,
+                quantity: create_js_data[0].quantity,
             }
         }
         return (
@@ -226,7 +229,7 @@ class CreateJobSheet extends Component {
                                                             </td>
                                                             <td >
                                                                 <Label>Max Approved Laminate Withdrawal:</Label>
-                                                                <Input type="number" name="max_approve_laminate_with[]"/>
+                                                                <Input type="number" name="max_approve_laminate_with[]" min={cjs.quantity}/>
                                                             </td>
                                                         </tr>
 
@@ -297,7 +300,7 @@ class CreateJobSheet extends Component {
                                                             </td>
                                                             <td >
                                                                 <Label>Max Approved Cap Withdrawal:</Label>
-                                                                <Input type="number" name="max_approve_cap_with[]"/>
+                                                                <Input type="number" name="max_approve_cap_with[]" min={cjs.quantity}/>
                                                             </td>
                                                         </tr>
 

@@ -85,7 +85,15 @@ class ViewJobSheetDetails extends Component {
                 delivered: delivered,
                 job: job,
                 js_id: id,
-			})
+			});
+
+            let updatejob = {
+            'workInProgress': workInProgress,
+            'completed'      : completed,
+            'delivered'      : delivered,
+            'job'            : job,}
+
+            this.props.handle_changes('updatejob',updatejob);
 	}
     toggleDel = () =>{
 	   this.setState({
@@ -222,7 +230,7 @@ class ViewJobSheetDetails extends Component {
 
                 <Modal size="lg" isOpen={this.state.modalOpenDeliver} toggle={this.toggleDel}>
                   <ModalHeader toggle={this.toggleDel}> Deliver</ModalHeader>
-                  <UpdateJobSheet js_id={this.state.js_id} />
+                  <UpdateJobSheet js_id={this.state.js_id} updatejob={this.props.updatejob} refresh={this.props.refresh}/>
                 </Modal>
 
                 <Modal size="lg" isOpen={this.state.modalOpen} toggle={this.toggleModal}>
@@ -245,6 +253,7 @@ const mapStateToProps = state => {
         create_js_data: state.warehouseReducer.create_js_data,
         js_last_id: state.warehouseReducer.js_last_id,
         job_sheet_id: state.warehouseReducer.job_sheet_id,
+        updatejob: state.warehouseReducer.updatejob,
         is_job_sheet_complete: state.warehouseReducer.is_job_sheet_complete,
     }
 }

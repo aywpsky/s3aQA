@@ -85,7 +85,7 @@ class mainbuilder extends Component{
                     </Switch>
                 )
                 break;
-            case 2:
+            case 3:
                 return(
                     <Switch>
                     <Route path="/dashboard" component={Dashboard} />
@@ -95,7 +95,7 @@ class mainbuilder extends Component{
                     </Switch>
                 )
                 break;
-            case 3:
+            case 2:
                 return(
                     <Switch>
                     <Route path="/dashboard" component={Dashboard} />

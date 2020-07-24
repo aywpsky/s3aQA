@@ -27,7 +27,8 @@ const initState = {
     special_inc                 :   null,
     add_details                 :   null,
     startDate                   :   new Date(),
-    actionType                  :   null
+    actionType                  :   null,
+    updatejob                   :   [],
 }
 
 const warehouseReducer = (state = initState, action) => {

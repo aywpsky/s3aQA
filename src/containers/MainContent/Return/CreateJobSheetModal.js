@@ -59,9 +59,31 @@ class CreateJobSheetModal extends Component {
     onClick3 = async () =>{
         this.props.set_toggle_modal('return_logistic_fields')
     }
-    // componentDidMount() {
-    //     this.getJobSheetData();
-    // }
+
+    handleChange = (e) => {
+        var value = e.target.value;
+
+        this.props.handle_changes('return_print_production_fields',false);
+        this.props.handle_changes('return_table_production_fields',false);
+        this.props.handle_changes('return_logistic_fields',false);
+
+        if(value == 'printingAndProduction'){
+            this.props.handle_changes('return_print_production_fields',true);
+            this.props.handle_changes('return_table_production_fields',true);
+        }else if (value == 'printing') {
+            this.props.handle_changes('return_print_production_fields',true);
+        }else if (value == 'production') {
+            this.props.handle_changes('return_table_production_fields',true)
+        }
+
+    }
+
+    quantityChange = (e) => {
+        var value = e.target.value;
+
+        this.props.handle_changes('return_quantity',value);
+    }
+
     Splice = (parent_index) => {
         const { addMore  } = this.state;
         addMore.form.splice(parent_index , 1);
@@ -96,11 +118,9 @@ class CreateJobSheetModal extends Component {
         this.props.handle_changes('return_js_last_id',jobsheet_id[0]['job_sheet_id']);
 
         let id = datas[0]['sales_id'];
-        console.log(id)
         if(id){
             let urls = Config.base_url+'warehouse/returnviewWorkOrder/'+id;
             let responses = await axios.get(urls);
-            console.log(responses.data);
             this.props.handle_changes('return_jobsheet_work_data',responses.data);
         }
     }
@@ -122,12 +142,14 @@ class CreateJobSheetModal extends Component {
                 js_number = parseInt(last_id)+1;
             }
 
+
              cjs = {
                 date: Moment(create_js_data['dispatch_date']).format('MMMM DD YYYY'),
                 po: 'JOID'+create_js_data['sales_id'],
                 sales_id:create_js_data['sales_id'],
                 js: 'JSID'+js_number,
                 company: create_js_data['company'],
+                quantity: create_js_data['quantity'],
             }
         }
         return (
@@ -187,7 +209,18 @@ class CreateJobSheetModal extends Component {
                                         </td>
                                         <td>
                                             <Label>Number of Products to Complete:</Label>
-                                            <Input type="number" name="num_of_prod_to_complete" required/>
+                                            <Input type="number" name="num_of_prod_to_complete" onChange={this.quantityChange} required/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2">
+                                            <Label>Department:</Label>
+                                            <Input type="select" name="department_type" onChange = {this.handleChange} required>
+                                                <option value="" selected hidden>-Select-</option>
+                                                <option value="printing">Printing</option>
+                                                <option value="production">Production</option>
+                                            </Input>
                                         </td>
                                     </tr>
 
@@ -203,8 +236,8 @@ class CreateJobSheetModal extends Component {
                                     </tr>
 
                                     {/* Print Production*/}
-                                    <tr className="print_production_trigger"  onClick={this.onClick}>
-                                        <th colSpan="2"><h5>Print Production</h5>{this.props.return_print_production_fields?<i className="fas fa-angle-up"></i>:<i className="fas fa-angle-down"></i>}</th>
+                                    <tr className="print_production_trigger"  style={{display:this.props.return_print_production_fields ? 'table-row':'none'}}>
+                                        <th colSpan="2"><h5>Print Production</h5></th>
                                     </tr>
                                     {this.state.addMore.form.map((val , idx) => {
                                         return(
@@ -232,7 +265,7 @@ class CreateJobSheetModal extends Component {
                                                             </td>
                                                             <td >
                                                                 <Label>Max Approved Laminate Withdrawal:</Label>
-                                                                <Input type="number" name="max_approve_laminate_with[]"/>
+                                                                <Input type="number" name="max_approve_laminate_with[]" min={this.props.return_quantity}/>
                                                             </td>
                                                         </tr>
 
@@ -262,8 +295,8 @@ class CreateJobSheetModal extends Component {
                                     </tr>
                                     {/* Print Production*/}
 
-                                    <tr className="print_production_trigger"  onClick={this.onClick2}>
-                                        <th colSpan="2"><h5>Tube Production</h5>{this.props.return_table_production_fields?<i className="fas fa-angle-up"></i>:<i className="fas fa-angle-down"></i>}</th>
+                                    <tr className="print_production_trigger"  style={{ display:this.props.return_table_production_fields ? 'table-row':'none'}}>
+                                        <th colSpan="2"><h5>Tube Production</h5></th>
                                     </tr>
                                     {/*Table Production*/}
                                     {this.state.addMoreTube.form.map((val , idx) => {
@@ -303,7 +336,7 @@ class CreateJobSheetModal extends Component {
                                                             </td>
                                                             <td >
                                                                 <Label>Max Approved Cap Withdrawal:</Label>
-                                                                <Input type="number" name="max_approve_cap_with[]"/>
+                                                                <Input type="number" name="max_approve_cap_with[]" min={this.props.return_quantity}/>
                                                             </td>
                                                         </tr>
 
@@ -333,34 +366,6 @@ class CreateJobSheetModal extends Component {
                                     </tr>
 
                                     {/* Table Production*/}
-
-                                    {/*Logistic*/}
-                                    <tr className="print_production_trigger"  onClick={this.onClick3}>
-                                        <th colSpan="2"><h5>Logistic</h5>{this.props.return_logistic_fields?<i className="fas fa-angle-up"></i>:<i className="fas fa-angle-down"></i>}</th>
-                                    </tr>
-
-                                    <tr className="print_production_fields" style={{ display:this.props.return_logistic_fields ? 'none':'table-row'}}>
-                                        <td>
-                                            <Label>Packaging Box Size:</Label>
-                                            <Input name="packaging_box_size" type="number" required/>
-                                        </td>
-                                        <td >
-                                            <Label>Max Approved Box Withdrawal:</Label>
-                                            <Input name="max_approve_box_with" required/>
-                                        </td>
-                                    </tr>
-
-                                    <tr className="print_production_fields" style={{display:this.props.return_logistic_fields ? 'none':'table-row'}}>
-                                        <td>
-                                            <Label>Quantity per Box:</Label>
-                                            <Input name="qty_per_box" type="number" required/>
-                                        </td>
-                                        <td >
-                                            <Label>Boxes to Deliver:</Label>
-                                            <Input name="boxes_to_deliver" type="number"  required/>
-                                        </td>
-                                    </tr>
-                                    {/* Logistic*/}
 
                                     <tr>
                                         <td>
@@ -434,6 +439,7 @@ const mapStateToProps = state => {
         return_print_production_fields: state.returnReducer.return_print_production_fields,
         return_table_production_fields: state.returnReducer.return_table_production_fields,
         return_logistic_fields: state.returnReducer.return_logistic_fields,
+        return_quantity: state.returnReducer.return_quantity,
     }
 }
 const mapActionToProps = dispatch => {

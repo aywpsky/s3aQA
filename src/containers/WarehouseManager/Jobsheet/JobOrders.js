@@ -7,9 +7,9 @@ import SimpleReactValidator from 'simple-react-validator';
 import { MDBDataTable } from 'mdbreact';
 import { Row, Col, } from 'reactstrap';
 import GroupButton from '../../CustomComponents/GroupButton';
-import ModalView from './ModalView';
+import ViewJobOrder from './ViewJobOrder';
 import ViewProcess from './ViewProcess';
-import ModalViewDetails from './ModalViewDetails';
+import ViewJobSheetDetails from './ViewJobSheetDetails';
 import { ProgressBar  } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
@@ -39,7 +39,7 @@ class JobOrders extends Component {
         let temp_data = [];
         let url = Config.base_url + 'warehouse/getSalesOrder';
         response = await axios.post(url, '');
-        if (response.data) {
+        if (response.data.status == 'ok') {
             const m = response.data.list.map((key, idx) => {
                 let groupBtn = [
                     { title: "Create Job Sheet",    icon: "ion-plus",      color: "primary",    function: () => this.creatJobSheetModal(key.sales_id)},
@@ -47,7 +47,7 @@ class JobOrders extends Component {
                     { title: "View Job Order Process",      icon: "ion-document-text",        color: "success",      function: () => this.openJobOrderProcess(key.sales_id) },
                 ];
                 let x = {
-                    salesID :      "SOID" + key.sales_id.padStart(5, "0"),
+                    salesID :      "JOID" + key.sales_id.padStart(5, "0"),
                     joborder:      key.description,
                     company :      key.company,
                     dispatch_date: key.dispatch_date,
@@ -126,7 +126,7 @@ class JobOrders extends Component {
         let url = Config.base_url + 'warehouse/viewWorkOrder/' + id,
         response = await axios.get(url);
 
-        if(response.data.length == 0){
+        if(response.data.length >= 2){
             this.props.handle_changes('is_job_sheet_complete',true);
         }else{
             this.props.handle_changes('is_job_sheet_complete',false);
@@ -148,7 +148,7 @@ class JobOrders extends Component {
 
         const data = {
             columns: [
-                { label: 'SALES ID',      field: 'salesID',       width: 150 },
+                { label: 'JOB ORDER ID',      field: 'salesID',       width: 150 },
                 { label: 'JOB ORDER',     field: 'customer',      width: 200 },
                 { label: 'CUSTOMER',      field: 'company',       width: 200 },
                 { label: 'DISPATCH DATE', field: 'dispatch_date', width: 200 },
@@ -161,8 +161,8 @@ class JobOrders extends Component {
             <AUX>
 
                 <ViewProcess/>
-                <ModalView/>
-                <ModalViewDetails refresh={() => this.displayJobSheetData(this.props.job_sheet_id)}/>
+                <ViewJobOrder/>
+                <ViewJobSheetDetails refresh={() => this.displayJobSheetData(this.props.job_sheet_id)}/>
 
                 <Row>
                     <Col sm={12}>

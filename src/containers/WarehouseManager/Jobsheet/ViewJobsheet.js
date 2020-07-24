@@ -1,22 +1,16 @@
 import React, { Component } from "react";
 import AUX from '../../../hoc/Aux_';
-import { Row, Col, Label, ModalBody, ModalFooter, Button, Input, Form } from 'reactstrap';
+import { Row, Col, Label, ModalBody } from 'reactstrap';
 import Config from "../../../config/Config";
 import axios from "axios";
 import Moment from 'moment';
-import Alertify from 'alertifyjs';
 
-class UpdateJobSheet extends Component {
+class ViewJobsheet extends Component {
     constructor(props) {
         super(props);
-        Alertify.defaults = Config.AlertConfig
         this.state = {
             js_data: [],
             department_data: [],
-            workInProgress: 0,
-            completed: 0,
-            delivered: 0,
-            job: '',
         }
     }
 
@@ -33,32 +27,6 @@ class UpdateJobSheet extends Component {
         }
 
     }
-    updateDeliverBtn = async(e) => {
-        e.preventDefault();
-        let response;
-        let id = this.props.js_id
-        const {workInProgress, completed,delivered, job }      = this.props.updatejob;
-        let url = Config.base_url + 'warehouse/updateDelivery/'+id;
-        const formData  = new FormData(e.target);
-
-        formData.append('workInProgress' , workInProgress);
-        formData.append('delivered' , delivered);
-        formData.append('completed' , completed);
-        formData.append('job' , job);
-
-        response = await axios.post(url, formData);
-
-
-        if (response.data) {
-           Alertify.success('Successfully Approved!');
-           this.setState({modalOpenDeliver: false});
-           this.props.refresh(this.props.job_sheet_id);
-       }else if(response.data == 0){
-           Alertify.error('Stocks not available!');
-       }else{
-           Alertify.error('Something went wrong!');
-       }
-    }
     render() {
         Moment.locale('en');
         return (
@@ -69,7 +37,6 @@ class UpdateJobSheet extends Component {
                         return (
 
                             <ModalBody className="ViewPrintingJob">
-                                <Form method="POST" onSubmit= {(e) => this.updateDeliverBtn(e)}>
                                 <table id="first_table" className="table table-bordered mb-0 first_table">
                                     <tbody>
                                         <tr>
@@ -222,34 +189,6 @@ class UpdateJobSheet extends Component {
 
                                             })
                                         }
-                                        {/*Logistic*/}
-                                        <tr>
-                                            <th colSpan="2"><h5>Logistic</h5></th>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <Label>Packaging Box Size:</Label>
-                                                <Input name="packaging_box_size" type="number" required/>
-                                            </td>
-                                            <td >
-                                                <Label>Max Approved Box Withdrawal:</Label>
-                                                <Input name="max_approve_box_with" required/>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <Label>Quantity per Box:</Label>
-                                                <Input name="qty_per_box" type="number" required/>
-                                            </td>
-                                            <td >
-                                                <Label>Boxes to Deliver:</Label>
-                                                <Input name="boxes_to_deliver" type="number" required/>
-                                            </td>
-                                        </tr>
-                                        {/* Logistic*/}
-
                                         <tr>
                                             <td>
                                                 <Label>Released By:</Label>
@@ -297,12 +236,7 @@ class UpdateJobSheet extends Component {
                                     </tbody>
                                 </table>
 
-                                <ModalFooter>
-                                     <Button color="primary" className="btn btn-secondary waves-effect" onClick={this.toggleDel}>Cancel</Button>
-                                     <Button type="submit" color="success" className="btn btn-secondary waves-effect">OK</Button>
-                                </ModalFooter>
-                            </Form>
-                        </ModalBody>
+                            </ModalBody>
                         )
                     })
                 }
@@ -313,4 +247,4 @@ class UpdateJobSheet extends Component {
 
 }
 
-export default UpdateJobSheet;
+export default ViewJobsheet;

@@ -8,10 +8,12 @@ import { MDBDataTable } from 'mdbreact';
 import { Row,Col,Modal, ModalHeader, ModalBody, Button, ModalFooter, } from 'reactstrap';
 import { ProgressBar  } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import JobSheetModal from './JobSheetModal';
+import CreateJobSheet from './CreateJobSheet';
 import GroupButton from '../../CustomComponents/GroupButton';
+import ViewJobsheet from './ViewJobsheet';
+import UpdateJobSheet from './UpdateJobSheet';
 
-class ModalViewDetails extends Component {
+class ViewJobSheetDetails extends Component {
 
     constructor(props) {
         super(props);
@@ -24,6 +26,8 @@ class ModalViewDetails extends Component {
             completed: 0,
             delivered: 0,
             job: '',
+            js_id:'',
+            modalOpen:false,
         }
     }
 
@@ -80,13 +84,28 @@ class ModalViewDetails extends Component {
                 completed: completed,
                 delivered: delivered,
                 job: job,
-			})
+                js_id: id,
+			});
+
+            let updatejob = {
+            'workInProgress': workInProgress,
+            'completed'      : completed,
+            'delivered'      : delivered,
+            'job'            : job,}
+
+            this.props.handle_changes('updatejob',updatejob);
 	}
     toggleDel = () =>{
 	   this.setState({
 		  modalOpenDeliver : !this.state.modalOpenDeliver,
 	   })
 	 }
+     toggleModal = (id = '') => {
+         this.setState({
+             js_id: id,
+             modalOpen: !this.state.modalOpen
+         })
+     }
     render() {
         let temp_data =[];
         let salesData = '';
@@ -117,19 +136,26 @@ class ModalViewDetails extends Component {
                  }
 
 
-                let percent = '';
+                let percent = 0;
                 let completed = '';
                 let delivered = '';
                 let num_to_complete = '';
                 let work_in_prog = '';
-                let total = '';
+                let total = 0;
+                let department = 'Production';
+
                 if(key.department == 0){
+                    department = 'Printing';
                     completed = key.dep_completed_qty ? key.dep_completed_qty : '0';
                     num_to_complete = key.max_approved_laminate_with;
                     delivered = key.dep_delivered_qty ? key.dep_delivered_qty : '0';
                     total = parseInt(completed) + parseInt(delivered);
                     work_in_prog = parseInt(num_to_complete - total);
-                    percent = ((parseInt(total) / parseInt(key.max_approved_laminate_with)) * 100);
+                    // console.log('max approved:'+key.max_approved_laminate_with);
+                    // console.log('total2:'+total);
+                     if(total != 0 && key.max_approved_laminate_with != 0){
+                        percent = ((parseInt(total) / parseInt(key.max_approved_laminate_with)) * 100);
+                    }
 
                 }else{
                     completed = key.prod_completed_qty ? key.prod_completed_qty : '0';
@@ -137,9 +163,15 @@ class ModalViewDetails extends Component {
                     delivered = key.prod_delivered_qty ? key.prod_delivered_qty : '0';
                     total = parseInt(completed) + parseInt(delivered);
                     work_in_prog = parseInt(num_to_complete - total);
-                    percent = ((parseInt(total) / parseInt(key.max_approved_cap_with)) * 100);
-
+                     if(total != 0 && key.max_approved_cap_with != 0){
+                        percent = ((parseInt(total) / parseInt(key.max_approved_cap_with)) * 100);
+                    }
                 }
+
+                let groupBtn = [
+                    { title: "Job Sheet",    icon: "ion-eye",      color: "info",    function: () => this.toggleModal(key.job_sheet_id)},
+                ];
+
                 let x = {
                     jobSheetID: "JSID" + key.job_sheet_id,
                     jobName: key.job,
@@ -149,7 +181,9 @@ class ModalViewDetails extends Component {
                     for_del:   completed != 0 ? <button className="btn btn-success" onClick={() => this.modalOpen(key.job_sheet_id,work_in_prog,completed,delivered,key.job)} type="button">{completed} - Deliver Now</button> : 0,
                     del: delivered,
                     num_com:  num_to_complete,
-                    status: status
+                    department: department,
+                    status: status,
+                    view_job_sheet: <GroupButton data={groupBtn} />
                 }
                 temp_data.push(x);
             });
@@ -165,16 +199,18 @@ class ModalViewDetails extends Component {
                 { label: 'For Delivery', field: 'for_del', width: 200 },
                 { label: 'Delivered', field: 'del', width: 200 },
                 { label: 'To Complete', field: 'num_com', width: 200 },
+                { label: 'Department', field: 'department', width: 200 },
                 { label: 'Status', field: 'status', width: 200 },
+                { label: 'Action', field: 'view_job_sheet', width: 200 },
             ],
             rows: salesData
         };
         return (
             <AUX>
-                <JobSheetModal refresh={() => this.props.refresh(this.props.job_sheet_id)}/>
+                <CreateJobSheet refresh={() => this.props.refresh(this.props.job_sheet_id)}/>
 
                 <Modal size="xl" isOpen={this.props.displayJSModal} toggle={() => this.props.set_toggle_modal('displayJSModal')} className="">
-                    <ModalHeader toggle={() => this.props.set_toggle_modal('displayJSModal')}>{job_name_title} Jobsheet Details</ModalHeader>
+                    <ModalHeader toggle={() => this.props.set_toggle_modal('displayJSModal')}>Jobsheet Details</ModalHeader>
                     <ModalBody>
 
                         <Row className="create_js_table" style={{display: this.props.is_job_sheet_complete == false ?'block':'none'}}>
@@ -192,16 +228,14 @@ class ModalViewDetails extends Component {
                     </ModalBody>
                 </Modal>
 
-                <Modal isOpen={this.state.modalOpenDeliver} toggle={this.toggleDel}>
-                  <ModalHeader toggle={this.toggleDel}>Approve Request</ModalHeader>
-                  <ModalBody>
-                      <p>Are you sure you to update it to delivered?</p>
-                      <p>It will be added to delivered data automatically once update.</p>
-                   <ModalFooter>
-                        <Button color="primary" className="btn btn-secondary waves-effect" onClick={this.toggleDel}>Cancel</Button>
-                        <Button type="submit" onClick={this.updateDeliverBtn} color="success" className="btn btn-secondary waves-effect">OK</Button>
-                   </ModalFooter>
-                  </ModalBody>
+                <Modal size="lg" isOpen={this.state.modalOpenDeliver} toggle={this.toggleDel}>
+                  <ModalHeader toggle={this.toggleDel}> Deliver</ModalHeader>
+                  <UpdateJobSheet js_id={this.state.js_id} updatejob={this.props.updatejob} refresh={this.props.refresh}/>
+                </Modal>
+
+                <Modal size="lg" isOpen={this.state.modalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Job Sheet</ModalHeader>
+                    <ViewJobsheet js_id={this.state.js_id} />
                 </Modal>
 
             </AUX>
@@ -219,6 +253,7 @@ const mapStateToProps = state => {
         create_js_data: state.warehouseReducer.create_js_data,
         js_last_id: state.warehouseReducer.js_last_id,
         job_sheet_id: state.warehouseReducer.job_sheet_id,
+        updatejob: state.warehouseReducer.updatejob,
         is_job_sheet_complete: state.warehouseReducer.is_job_sheet_complete,
     }
 }
@@ -228,4 +263,4 @@ const mapActionToProps = dispatch => {
         handle_changes: (state, value) => dispatch({ type: 'HANDLE_CHANGE', state: state, value: value }),
     }
 }
-export default connect(mapStateToProps, mapActionToProps)(ModalViewDetails);
+export default connect(mapStateToProps, mapActionToProps)(ViewJobSheetDetails);

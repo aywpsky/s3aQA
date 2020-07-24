@@ -31,8 +31,8 @@ class List extends Component{
     render() {
         return (
             <>
-                <Input type="select" name="po_number" onChange = {this.handleChange}>
-                <option value={'none'}> - Select - </option>
+                <Input type="select" name="po_number" onChange = {this.handleChange} required>
+                <option value={''}> - Select - </option>
                     {
                         this.state.material.map((val) => {
                             return <option value={val.sales_id}>{'JOID'+val.sales_id.padStart(5, "0")}</option>
