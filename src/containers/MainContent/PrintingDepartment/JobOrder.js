@@ -25,6 +25,7 @@ class JobOrder extends Component {
             js_id: '',
             requestModal: false,
             OpenCompleted: false,
+            printing_dep_status:0,
         }
 
     }
@@ -62,9 +63,10 @@ class JobOrder extends Component {
 
     }
 
-    OpenCompleted = async (id) => {
+    OpenCompleted = async (id, job_status) => {
         this.setState({
             js_id: id,
+            printing_dep_status:job_status,
             OpenCompleted: !this.state.OpenCompleted
         });
 
@@ -78,9 +80,8 @@ class JobOrder extends Component {
 
         if (response.data.msg == 'success') {
             const m = response.data.result.map((key) => {
-                console.log(key.printing_dep_status);
                 let groupBtn = [
-                    { title:  (key.printing_dep_status != '0') ? "Finished Items":"Update to In-progress", icon: (key.printing_dep_status != '0') ? "ion-ios7-paper-outline" : "ion-checkmark", color: "success", function: (key.printing_dep_status != '0') ? () => this.OpenCompleted(key.job_sheet_id) : () => this.approveJS(key.job_sheet_id) },
+                    { title:  (key.printing_dep_status != '0') ? "Finished Items":"Update to In-progress", icon: (key.printing_dep_status != '0') ? "ion-ios7-paper-outline" : "ion-checkmark", color: "success", function: (key.printing_dep_status != '0') ? () => this.OpenCompleted(key.job_sheet_id, key.printing_dep_status) : () => this.approveJS(key.job_sheet_id) },
                     { title: "View", icon: "ion-eye", color: "info", function: () => this.toggleModal(key.job_sheet_id) },
                     { title: "Request Material", icon: "ion-plus", color: "warning", function: () => this.requestForm(key.job_sheet_id) },
                 ];
@@ -128,7 +129,7 @@ class JobOrder extends Component {
                 }
                 temp_data.push(x);
             });
-            this.setState({ job_sheet_data: temp_data, loading: false })
+            this.setState({ job_sheet_data: temp_data, loading: false,  })
         }
     }
 
@@ -183,6 +184,7 @@ class JobOrder extends Component {
                     <OpenCompleted
                         id={this.state.js_id}
                         isOpen={this.state.OpenCompleted}
+                        job_status={this.state.printing_dep_status}
                         Job={this.state.OpenCompleted}
                         toggle={() => this.OpenCompleted()}
                         reload = {()=>this.GetJobSheet()}

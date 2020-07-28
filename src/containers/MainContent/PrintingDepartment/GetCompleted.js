@@ -77,9 +77,10 @@ class GetCompleted extends React.Component {
 
         return (
             <>
-
-                <AddCompleted js_id={this.props.js_id} refreshData={() => this.GetCompletedData()} hasData={this.state.hasDataToday} lastData={this.state.lastData} log_id={this.state.log_id}  reload = {this.props.reload}/>
-                <hr/>
+                <div style={{display: this.props.job_status == 4 && !this.state.hasDataToday ? 'none' : 'block'}}>
+                    <AddCompleted js_id={this.props.js_id} refreshData={() => this.GetCompletedData()} hasData={this.state.hasDataToday} lastData={this.state.lastData} log_id={this.state.log_id}  reload = {this.props.reload}/>
+                    <hr/>
+                </div>
                 <MDBDataTable
                     responsive
                     bordered

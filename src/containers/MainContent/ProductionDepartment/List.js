@@ -76,7 +76,7 @@ class List extends Component {
         return (yyyy + "-" + MM + "-" + dd);
     }
 
-    addCompletebtn = async(id) => {
+    addCompletebtn = async(id, job_status) => {
         var today = this.formatDateToString();
         let url = Config.base_url + 'production/lastdata/' + today + '/' + id;
         let res = await axios.get(url);
@@ -84,6 +84,11 @@ class List extends Component {
         this.props.set_modal();
         this.props.set_id(id);
 
+        if(job_status == 4){
+            this.props.handle_changes('job_status',true);
+        }else{
+            this.props.handle_changes('job_status',false);
+        }
         if (res.data.status == 'ok') {
             this.props.set_edit(true);
             this.props.set_num_edit(res.data.res.qty);
@@ -131,19 +136,21 @@ class List extends Component {
                     ];
                 }else{
                     groupBtn = [
-                        {title: "Finished Items",icon: "ion-ios7-paper-outline",color:"success", function: () => this.addCompletebtn(key.job_sheet_id)},
+                        {title: "Finished Items",icon: "ion-ios7-paper-outline",color:"success", function: () => this.addCompletebtn(key.job_sheet_id,key.production_dep_status)},
                         {title: "View",icon: "ion-eye",color:"info", function: () => this.toggleModal(key.job_sheet_id)},
                         {title: "Request Material",icon: "ion-plus",color:"warning", function: () => this.requestForm(key.job_sheet_id)},
                     ];
                 }
                 let completed = 0;
+                let num_to_complete = key.from_return == '1' ? key.num_of_prod_to_complete : key.max_approved_cap_with;
+
                 if(key.completed_qty != null){
                     completed = key.completed_qty;
                 }
                 let per = 0;
 
                 if(completed != 0 && key.max_approved_cap_with != 0){
-                    per = parseInt((parseInt(parseInt(completed)/parseInt(key.max_approved_cap_with)))*100);
+                    per = parseInt((parseInt(parseInt(completed)/parseInt(num_to_complete)))*100);
                 }
                 let x = {
                     js_no: "ID" + key.job_sheet_id.padStart(5, "0"),
@@ -227,7 +234,8 @@ const mapStateToProps = state => {
         js_id:state.appreducers.js_id,
         editable: state.appreducers.isEditable,
         num_edit: state.appreducers.num_edit,
-        log_id : state.appreducers.log_id
+        log_id : state.appreducers.log_id,
+        job_status : state.appreducers.job_status
     }
 }
 
@@ -237,7 +245,8 @@ const mapActionToProps = dispatch => {
         set_edit: (val) => dispatch({type:'EDIT_FINISHED' , value : val}),
         set_id: (id) => dispatch({type:'SET_ID',value_id:id}),
         set_num_edit: (num) => dispatch({type:'CHANGE_EDIT',value:num}),
-        setLogId: (id) => dispatch({type:'LOG_ID',value:id})
+        setLogId: (id) => dispatch({type:'LOG_ID',value:id}),
+        handle_changes: (state, value) => dispatch({ type: 'HANDLE_CHANGE', state: state, value: value }),
     }
 }
 

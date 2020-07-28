@@ -64,10 +64,9 @@ class AddCompleted extends React.Component {
     }
 
     render() {
-
         return (
             <>
-                <Form onSubmit={(e) => this.handleClick(e)}>
+                <Form onSubmit={(e) => this.handleClick(e)} >
                     <Row>
                         <Col md={9}>
                             <FormGroup>
@@ -79,7 +78,6 @@ class AddCompleted extends React.Component {
                                         <option value='1'>In-progress</option>
                                         <option value='2'>On-hold</option>
                                         <option value='3'>Off-track</option>
-                                        <option value='4'>Completed</option>
                                     </select>
                                 </FormGroup>
 

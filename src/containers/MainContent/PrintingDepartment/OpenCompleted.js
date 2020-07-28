@@ -30,7 +30,7 @@ const OpenCompleted = (props) => {
                 <Row>
                     <Col md={12}>
                         <FormGroup>
-                            <GetCompleted js_id={props.id} reload = {props.reload}/>
+                            <GetCompleted js_id={props.id} job_status={props.job_status} reload = {props.reload}/>
                         </FormGroup>
                     </Col>
                 </Row>

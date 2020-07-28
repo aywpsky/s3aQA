@@ -4,6 +4,7 @@ const initState = {
     isEditable : false,
     num_edit : '',
     log_id : null,
+    job_status : false,
 }
 
 const appreducers = (state = initState, action) => {
@@ -33,6 +34,11 @@ const appreducers = (state = initState, action) => {
                 ...state,
                 log_id: action.value
             }
+        case 'HANDLE_CHANGE':
+           return {
+              ...state,
+              [action.state]: action.value
+           }
         default:
             return state;
     }

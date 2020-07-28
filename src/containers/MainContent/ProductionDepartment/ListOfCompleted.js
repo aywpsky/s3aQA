@@ -16,7 +16,7 @@ class ListOfCompleted extends Component {
             data : [],
             loading : true
         };
-        
+
         this.fetchData = this.fetchData.bind(this);
     }
 
@@ -71,7 +71,7 @@ class ListOfCompleted extends Component {
         }else{
             return(
                 <>
-                    <Row>
+                    <Row style={{margin: "15px 15px 0"}}>
                         <Col sm={12} className="">
                             <div className="">
                                 <MDBDataTable

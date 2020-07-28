@@ -240,7 +240,7 @@ class Return extends Component {
 
                 <Modal size="lg" isOpen={this.state.modalOpenDeliver} toggle={this.toggleDel}>
                   <ModalHeader toggle={this.toggleDel}>Deliver</ModalHeader>
-                   <UpdateJobSheet js_id={this.state.js_id} updatejob={this.props.return_updatejob} refresh={() => this.displayJobSheetData()}/>
+                   <UpdateJobSheet js_id={this.state.js_id} updatejob={this.props.return_updatejob} refresh={() => this.displayJobSheetData()} toggleDel={this.toggleDel}/>
                 </Modal>
 
             </AUX>

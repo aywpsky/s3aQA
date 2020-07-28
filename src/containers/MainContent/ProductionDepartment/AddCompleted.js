@@ -38,7 +38,9 @@ class AddCompleted extends Component {
             let formdata = new FormData(e.target);
             formdata.append('js_id' , js_id);
             let response = await axios.post(url , formdata);
-            if (response.data.status == 'ok') {
+            if(response.data.status == 'excess'){
+                Alertify.error('Number of items completed is greated than numbers of items to complete!')
+            }else if (response.data.status == 'ok') {
                 Alertify.success('Successfully Added!');
                 this.props.set_modal();
                 this.props.fetchData();
@@ -59,7 +61,9 @@ class AddCompleted extends Component {
             formdata.append('log_id' , this.props.log_id);
             formdata.append('js_id' , this.props.js_id);
             let res = await axios.post(url,formdata);
-            if (res.data.status == 'ok') {
+            if(res.data.status == 'excess'){
+                Alertify.error('Number of items completed is greated than numbers of items to complete!')
+            }else if (res.data.status == 'ok') {
                 Alertify.success('Successfully Updated!');
                 this.props.set_modal();
                 this.props.fetchData();
@@ -78,13 +82,13 @@ class AddCompleted extends Component {
             <AUX>
                 <Modal isOpen = {this.props.isModalOpen} toggle = {() => this.props.set_modal()} className="">
                     <ModalHeader toggle = {() => this.props.set_modal()}>Completed List</ModalHeader>
-                    <Form onSubmit = {(e) => this.props.isEditable ? this.handleEdit(e) : this.handleSubmit(e)}>
+                    <Form onSubmit = {(e) => this.props.isEditable ? this.handleEdit(e) : this.handleSubmit(e)} style={{display: this.props.job_status && !this.props.isEditable ? 'none' : 'block'}}>
                         <ModalBody>
                             <Row>
                                 <Col md={4}>
                                     <FormGroup>
                                         <Label>Completed</Label>
-                                        <Input name="finished_prod" placeholder="Enter data" value={this.props.num_edit} onChange = {(e) => this.props.set_num_edit(e.target.value)}/>
+                                        <Input name="finished_prod" placeholder="Enter finished quantity" value={this.props.num_edit} onChange = {(e) => this.props.set_num_edit(e.target.value)}/>
                                         <span id="err">{this.validator.message('Finished qty', this.props.num_edit, 'required|numeric')}</span>
                                     </FormGroup>
                                 </Col>
@@ -95,22 +99,21 @@ class AddCompleted extends Component {
                                             <option value="1">In-Progress</option>
                                             <option value="2">On Hold</option>
                                             <option value="3">Off-Track</option>
-                                            <option value="4">Completed</option>
                                         </Input>
                                     </FormGroup>
                                 </Col>
                                 <Col md={4} className="completed-col">
                                     <FormGroup>
-                                        <Button style={{width : '100%'}} type="submit" color="primary" className="btn btn-secondary waves-effect completed-btn" >{this.props.isEditable ? 'Update' : 'Add'}</Button>
+                                        <Button style={{width : '100%'}} type="submit" color={this.props.isEditable ? "success" : "primary"} className="btn btn-secondary waves-effect completed-btn" >{this.props.isEditable ? 'Update' : 'Submit'}</Button>
                                     </FormGroup>
                                 </Col>
                             </Row>
                             <hr/>
-                        <ListOfCompleted />
 
                         </ModalBody>
 
                     </Form>
+                    <ListOfCompleted />
                 </Modal>
             </AUX>
         );
@@ -123,7 +126,8 @@ const mapStateToProps = state => {
         js_id:state.appreducers.js_id,
         isEditable:state.appreducers.isEditable,
         num_edit:state.appreducers.num_edit,
-        log_id:state.appreducers.log_id
+        log_id:state.appreducers.log_id,
+        job_status:state.appreducers.job_status
     }
 }
 
@@ -131,7 +135,8 @@ const mapActionToProps = dispatch => {
     return {
         set_modal: () => dispatch({type:'OPEN_MODAL'}),
         set_isUpdate : (val) => dispatch({type : 'EDIT_FINISHED' , value : val}),
-        set_num_edit: (num) => dispatch({type:'CHANGE_EDIT',value:num})
+        set_num_edit: (num) => dispatch({type:'CHANGE_EDIT',value:num}),
+        handle_changes: (state, value) => dispatch({ type: 'HANDLE_CHANGE', state: state, value: value }),
     }
 }
 
